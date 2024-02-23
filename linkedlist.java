@@ -178,72 +178,68 @@ public class linkedlist{
         prev.next = prev.next.next ;
         return;
     }
-    public static void zigzag(){
-        //find mid
+
+    public static boolean iscycle(){   //floyds cycle finding algorithm
         Node slow = head;
-        Node fast = head.next;    //to find last node of first half
+        Node fast =head;
 
         while(fast!=null && fast.next!=null){
-            slow=slow.next;
+            slow = slow.next;  //+1
+            fast = fast.next.next;  //+2
+
+            if(slow == fast){      //cycle exists
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static void removecycle(){
+        //detects a cycle
+        Node slow =head;
+        Node fast = head;
+        boolean cycle = false;
+
+        while(fast!=null && fast.next!=null){
+            slow =slow.next;
             fast = fast.next.next;
-        }
-        Node mid = slow;     //mid
+            if(slow==fast){
+                cycle=true;
+                break;
 
-        //reverse after mid
-        Node curr = mid.next;    //start point of second half
-        mid.next = null;      //terminate the first half
+            }
+        }
+        if(cycle==false){
+            return;
+        }
+
+        //find meet point
+        slow = head;
         Node prev = null;
-        Node next;
-        while(curr!=null){
-            next = curr.next;
-            curr.next = prev;
-            prev =curr;
-            curr =next;
+
+        while(slow!=fast){
+            prev = fast;
+            slow = slow.next;
+            fast = fast.next;
         }
 
-        //alternate merging
-        Node lh = head;
-        Node rh = prev;
-        Node nextleft , nextright;
-
-        while(lh!=null && rh!=null){
-            nextleft = lh.next;
-            lh.next = rh;
-            nextright =rh.next;
-            rh.next = nextleft;
-            lh = nextleft;
-            rh = nextright;
-        }
+        //make last node next null
+        prev.next = null;
     }
     public static void main(String args[]){
 
-        linkedlist ll = new linkedlist();
-        //ll.print();
-        ll.addfirst(1);
-       // ll.print();
-        ll.addfirst(2);
-        ll.addlast(3);
-        ll.addlast(4);
-        //ll.print();
+         head = new Node(1);
+         Node temp = new Node(2);
+         head.next = temp;
+         head.next.next = new Node(3);
+         head.next.next.next = temp;
 
-        ll.add(2 , 7);
-        // ll.removefirst();
-        // ll.print();
-        // ll.removelast();
-        // ll.print();
+         System.out.println(iscycle());
+         removecycle();
+         System.out.println(iscycle());
 
-        // System.out.println(size);
 
-        // System.out.println(recsearch(3));
-        // System.out.println(itrsearch(3));
-        // ll.print();
-        // ll.reverse();
-        // ll.print();
-
-        // ll.deletenthfromend(3);
-        ll.print();
-        ll.zigzag();
-        ll.print();
 
 
     }
